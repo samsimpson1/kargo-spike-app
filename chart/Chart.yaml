@@ -1,0 +1,4 @@
+apiVersion: v2
+name: replatforming-app
+description: A Helm chart for deploying the replatforming application
+version: 0.1.0

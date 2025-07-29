@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+ labels:
+   app: test-app
+ name: test-app
+spec:
+ replicas: 1
+ selector:
+   matchLabels:
+     app: test-app
+ strategy: {}
+ template:
+   metadata:
+     creationTimestamp: null
+     labels:
+       app: test-app
+   spec:
+     containers:
+     - image: "ghcr.io/alphagov/govuk/govuk-replatform-test-app:{{ .Values.appVersion }}"
+       name: test-app
+       resources: {}
+       securityContext:
+         allowPrivilegeEscalation: false
+         capabilities:
+           drop:
+             - "ALL"
+         readOnlyRootFilesystem: true
+       volumeMounts:
+         - name: test-app-tmp
+           mountPath: /tmp
+     securityContext:
+       seccompProfile:
+         type: RuntimeDefault
+       fsGroup: 101
+       runAsNonRoot: true
+       runAsUser: 101
+       runAsGroup: 101
+     volumes:
+     - name: test-app-tmp
+       emptyDir: {}
