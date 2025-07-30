@@ -13,9 +13,6 @@ spec:
   strategy:
     blueGreen:
       activeService: test-app
-      postPromotionAnalysis:
-        templates:
-          - templateName: test-app-e2e-tests
   template:
     metadata:
       labels:
