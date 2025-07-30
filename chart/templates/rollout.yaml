@@ -1,21 +1,26 @@
-apiVersion: apps/v1
-kind: Deployment
+apiVersion: argoproj.io/v1alpha1
+kind: Rollout
 metadata:
- labels:
-   app: test-app
- name: test-app
+  name: test-app
+  namespace: test-app
+  labels:
+    app: test-app
 spec:
- replicas: 1
- selector:
-   matchLabels:
-     app: test-app
- strategy: {}
- template:
-   metadata:
-     creationTimestamp: null
-     labels:
-       app: test-app
-   spec:
+  selector:
+    matchLabels:
+      app: test-app
+  replicas: 3
+  strategy:
+    blueGreen:
+      activeService: test-app
+      postPromotionAnalysis:
+        templates:
+          - templateName: test-app-e2e-tests
+  template:
+    metadata:
+      labels:
+        app: test-app
+    spec:
      containers:
      - image: "ghcr.io/alphagov/govuk/govuk-replatform-test-app:{{ .Values.appVersion }}"
        name: test-app
